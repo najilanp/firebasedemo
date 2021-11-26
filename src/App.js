@@ -1,24 +1,51 @@
-import logo from './logo.svg';
-import './App.css';
+import "./App.css";
+import firebase from "./Firebase";
+import {useState, useEffect} from "react";
+
 
 function App() {
-  return (
+
+  const ref = firebase.firestore().collection("developers")
+  console.log(ref);
+
+  const [data, setdata] = useState([])
+  const [loader, setloader] = useState(true)
+
+  function getData(){
+    ref.onSnapshot((querySnapshot) => {
+      const items = []
+      querySnapshot.forEach((doc) => {
+        items.push(doc.data())
+      })
+      console.log(items);
+      setdata(items)
+      setloader(false)
+    })
+  }
+
+
+  useEffect(() => {
+    getData()
+    console.log(data);
+  }, [])
+    
+    
+    
+    
+    return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+   <h1>heloo</h1>
+
+   {loader === false && (data.map((dev) => {
+
+    <div key={dev.id}>
+    <h1>Name : {dev.name}</h1>
+    <p>Skill : {dev.skill}</p>
+
     </div>
+
+     }))}
+   </div>
   );
 }
 
