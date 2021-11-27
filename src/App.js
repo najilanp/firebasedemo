@@ -6,12 +6,22 @@ import {useState, useEffect} from "react";
 function App() {
 
   const ref = firebase.firestore().collection("developers")
-  console.log(ref);
-
+  
+ 
   const [data, setdata] = useState([])
   const [loader, setloader] = useState(true)
 
+  
+  useEffect(() => {
+   
+    getData();
+    
+  }, [])
+  
+    
+
   function getData(){
+
     ref.onSnapshot((querySnapshot) => {
       const items = []
       querySnapshot.forEach((doc) => {
@@ -23,28 +33,26 @@ function App() {
     })
   }
 
-
-  useEffect(() => {
-    getData()
-    console.log(data);
-  }, [])
-    
-    
     
     
     return (
     <div className="App">
    <h1>heloo</h1>
 
-   {loader === false && (data.map((dev) => {
-
-    <div key={dev.id}>
+   {loader===false?(
+   data.map((dev) => {
+     return(
+    <>
+   
     <h1>Name : {dev.name}</h1>
+    
     <p>Skill : {dev.skill}</p>
 
-    </div>
+    
+    </>
+     )
 
-     }))}
+   })):null}
    </div>
   );
 }
