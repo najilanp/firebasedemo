@@ -1,27 +1,20 @@
 import "./App.css";
+import {useState,useEffect} from "react";
 import firebase from "./Firebase";
-import {useState, useEffect} from "react";
+import DataBlock from "./DataBlock";
+import FbCreate from "./FbCreate";
+
+const ref = firebase.firestore().collection("developers")
 
 
 function App() {
 
-  const ref = firebase.firestore().collection("developers")
-  
- 
+  // console.log(ref);
+
   const [data, setdata] = useState([])
   const [loader, setloader] = useState(true)
 
-  
-  useEffect(() => {
-   
-    getData();
-    
-  }, [])
-  
-    
-
   function getData(){
-
     ref.onSnapshot((querySnapshot) => {
       const items = []
       querySnapshot.forEach((doc) => {
@@ -33,28 +26,28 @@ function App() {
     })
   }
 
-    
+  useEffect(() => {
+    getData()
+    // console.log(data);
+  }, [])
     
     return (
     <div className="App">
-   <h1>heloo</h1>
+   <h1>Heloo Developers</h1>
 
-   {loader===false?(
-   data.map((dev) => {
-     return(
-    <>
+    {loader === false ?
+    (data.map((dev) => (
    
-    <h1>Name : {dev.name}</h1>
-    
-    <p>Skill : {dev.skill}</p>
 
+         <DataBlock dev={dev} /> 
     
-    </>
-     )
+    
+    ))):null}
 
-   })):null}
+     <FbCreate />
+  
    </div>
   );
 }
-
+export {ref};
 export default App;
